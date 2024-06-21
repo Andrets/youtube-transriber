@@ -1,0 +1,44 @@
+.button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 10px 5px;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	font-size: 18px;
+	font-weight: 400;
+	line-height: 16px;
+	text-align: center;
+	letter-spacing: 0.5px;
+	white-space: nowrap;
+	color: #000;
+	border: none;
+
+	&:focus {
+		outline: none;
+		opacity: 0.8;
+	}
+	&:hover {
+		opacity: 0.8;
+	}
+
+	&:active {
+		opacity: 0.6;
+	}
+
+	&:disabled {
+		opacity: 0.5;
+		pointer-events: none;
+	}
+
+	&.primary {
+		background-color: var(--color-primary);
+		color: var(--color-white);
+	}
+
+	&.secondary {
+		background-color: var(--color-secondary);
+		color: var(--color-white);
+	}
+}
