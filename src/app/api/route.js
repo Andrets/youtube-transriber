@@ -1,5 +1,5 @@
 'use server'
-import { useRouter } from 'next/router'
+import { usePathname } from 'next/navigation'
 import { getSubtitles } from 'youtube-captions-scraper'
 
 export async function generateStaticParams() {
@@ -10,8 +10,8 @@ export async function generateStaticParams() {
 }
 
 export default async function DynamicPage({params}) {
-  const router = useRouter()
-  if (router.isFallback) {
+  const router = usePathname()
+  if (router === '/api') {
     return <div>Loading...</div>
   }
   return <div>Dynamic Page: {params.dynamic}</div>
