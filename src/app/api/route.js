@@ -1,5 +1,5 @@
 'use server'
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/router'
 import { getSubtitles } from 'youtube-captions-scraper'
 
 export async function generateStaticParams() {
