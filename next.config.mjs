@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	output: 'export',
+	swcMinify: false // disable swc
 };
 
 export default nextConfig;
