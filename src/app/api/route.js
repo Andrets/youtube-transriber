@@ -2,7 +2,7 @@
 import { getSubtitles } from 'youtube-captions-scraper'
 
 export async function GET(req, res) {
-  const { searchParams } = new URL(req.url)
+  const { searchParams } = new URL(req.url) 
   const videoID = searchParams.get('videoId')
   const lang = searchParams.get('lang')
   try {
