@@ -27,29 +27,6 @@ export default function Home() {
     }
   }
 
-  const processCaptions = (captions) => {
-    const sentenceRegex = /[^.!?]+[.!?]+/g // Регулярное выражение для предложений
-    let processed = []
-
-    captions.forEach(caption => {
-      const matches = caption.text.match(sentenceRegex)
-      if (matches) {
-        matches.forEach(sentence => {
-          processed.push({
-            text: sentence.trim(),
-            start: caption.start,
-            end: caption.end
-          })
-        })
-      } else {
-        processed.push(caption)
-      }
-    })
-
-    return processed
-  }
-
-
   return (
     <main className={styles.main}>
         <div className={styles.container}>

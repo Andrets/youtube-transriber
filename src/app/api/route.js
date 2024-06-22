@@ -8,14 +8,7 @@ export async function GET(req, res) {
   const lang = searchParams.get('lang')
   try {
     const subtitles = await getSubtitles({videoID: videoID, lang: lang}); // call this if you only need the subtitles
-    console.log(subtitles);
-    const subs = subtitles.map((caption) => ({
-      text: caption.text,
-      start: parseFloat(caption.start),
-      end: parseFloat(caption.start) + parseFloat(caption.dur),
-    }))
-
-    const mergedSubs = await mergeSubtitles(subs)
+    const mergedSubs = await mergeSubtitles(subtitles)
     return Response.json({ mergedSubs });
   } catch (error) {
     return Response.json({ error: error.message });
@@ -23,22 +16,37 @@ export async function GET(req, res) {
 }
 
 export async function mergeSubtitles(subs) {
+  const formatDate = (time) => {
+    const date = new Date(time * 1000)
+    const mSecs = (time % 1).toFixed(3).split('.')[1]
+    return `${date.toISOString().split('T')[1].split('.')[0]}.${mSecs}`
+  }
   let sentences = []
   let currentSentence = ""
-  let sentenceStart = subs[0].start
-  let sentenceEnd = subs[0].end
+  let sentenceStart = parseFloat(subs[0].start)
+  let sentenceEnd = parseFloat(subs[0].start) + parseFloat(subs[0].dur)
   subs.forEach((sub, index) => {
-    currentSentence += sub.text + " ";
-    if (index === subs.length - 1 || (subs[index + 1].text[0] === subs[index + 1].text[0].toUpperCase() && !subs[index + 1].text.match(/^(\.|,|;|!|\?)$/))) {
+    if (currentSentence.length > 0) {
+      currentSentence += " "
+    }
+    currentSentence += sub.text
+    sentenceEnd = parseFloat(sub.start) + parseFloat(sub.dur)
+
+    const nextSub = subs[index + 1]
+    const endsWithPunctuation = sub.text.endsWith('.') || sub.text.endsWith('!') || sub.text.endsWith('?');
+    const startsWithUpperCase = nextSub && nextSub.text[0] === nextSub.text[0].toUpperCase();
+    const isNewSentence = index === subs.length - 1 || (endsWithPunctuation && startsWithUpperCase)
+
+    if (isNewSentence) {
       sentences.push({
         text: currentSentence.trim(),
-        start: sentenceStart,
-        end: sentenceEnd
-      })
-      currentSentence = ""
+        start: formatDate(sentenceStart),
+        end: formatDate(sentenceEnd)
+      });
+
+      currentSentence = "";
       if (index + 1 < subs.length) {
-        sentenceStart = subs[index + 1].start
-        sentenceEnd = subs[index + 1].end
+        sentenceStart = parseFloat(subs[index + 1].start);
       }
     }
   })
