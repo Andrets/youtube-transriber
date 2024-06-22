@@ -5,7 +5,8 @@ export const CaptionTable = ({ captions }) => {
       return 'Invalid time';
     }
     const date = new Date(timeInSeconds * 1000);
-    return date.toISOString().substr(11, 8);
+    const milliseconds = (timeInSeconds % 1).toFixed(3).split('.')[1];
+    return `${date.toISOString().split('T')[1].split('.')[0]}.${milliseconds}`;
   };
   return (
     <div className={styles.table}>
