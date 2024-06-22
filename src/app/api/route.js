@@ -14,8 +14,34 @@ export async function GET(req, res) {
       start: parseFloat(caption.start),
       end: parseFloat(caption.start) + parseFloat(caption.dur),
     }))
-    return Response.json({ subs });
+
+    const mergedSubs = await mergeSubtitles(subs)
+    return Response.json({ mergedSubs });
   } catch (error) {
     return Response.json({ error: error.message });
   }
+}
+
+export async function mergeSubtitles(subs) {
+  let sentences = []
+  let currentSentence = ""
+  let sentenceStart = subs[0].start
+  let sentenceEnd = subs[0].end
+  subs.forEach((sub, index) => {
+    currentSentence += sub.text + " ";
+    if (index === subs.length - 1 || (subs[index + 1].text[0] === subs[index + 1].text[0].toUpperCase() && !subs[index + 1].text.match(/^(\.|,|;|!|\?)$/))) {
+      sentences.push({
+        text: currentSentence.trim(),
+        start: sentenceStart,
+        end: sentenceEnd
+      })
+      currentSentence = ""
+      if (index + 1 < subs.length) {
+        sentenceStart = subs[index + 1].start
+        sentenceEnd = subs[index + 1].end
+      }
+    }
+  })
+
+  return sentences
 }

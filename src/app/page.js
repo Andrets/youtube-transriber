@@ -19,7 +19,7 @@ export default function Home() {
       console.log(videoId)
       const response = await fetch(`/api?videoId=${videoId}&lang=${lang}`)
       const data = await response.json()
-      setCaptions(processCaptions(data.subs))
+      setCaptions(data.mergedSubs)
     } catch (error) {
       console.error(error)
     } finally {
