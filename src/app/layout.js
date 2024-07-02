@@ -1,5 +1,6 @@
 import { Header } from '@/components/HeaderWrapper'
 import { Inter } from "next/font/google"
+import Head from 'next/head'
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"], weight: "400" });
@@ -12,11 +13,16 @@ export const metadata = {
 export default function RootLayout({ children }) {
   const authorized = false;
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        {authorized ? <Header /> : null}
-        {children}
-      </body>
-    </html>
+    <>
+      <Head>
+      <meta name="frog" content="05ef141a1925c5890688f13668f2e303" />
+      </Head>
+      <html lang="en">
+        <body className={inter.className}>
+          {authorized ? <Header /> : null}
+          {children}
+        </body>
+      </html>
+    </>
   );
 }
